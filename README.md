@@ -1,5 +1,7 @@
 # Anime Title Matcher (ATM)
 
+[![Build Status](https://travis-ci.com/go-ive/atm.svg?branch=master)](https://travis-ci.com/go-ive/atm)
+
 The purpose of this tool is to find the best matching Anime for a given string.
 
 The result is always exactly one Anime with some metadata in JSON-format. Anime Indexer recognizes

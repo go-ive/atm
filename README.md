@@ -56,27 +56,17 @@ $ java -jar atm.jar 未来日記
 ATM requires a local Java Runtime installation with version 1.8 or higher. An active internet connection is required
 for the first execution to download the Anime database file.
 
-## Building and Installation
+## Usage
 
-Required tools:
+### Installation
 
-* Maven 3.3.9
-* JDK 1.8+
+Download the latest atm.jar from the [Releases Page](https://github.com/go-ive/atm/releases).
 
-Clone the git repository and run maven in the root directory.
-
-`$ mvn clean install`
-
-This creates the **atm.jar** file in the _target_ directory. This is the main executable as
-shown in the examples.
+`$ java -jar atm.jar [OPTIONS] <arg>`
 
 For convenience you can create an alias in your .bashrc or profile:
 
 `$ alias atm="java -jar /path/of/jar/atm.jar"`
-
-## Usage and Options
-
-`$ java -jar atm.jar [OPTIONS] <arg>`
 
 ### Example Usages
 
@@ -89,16 +79,33 @@ $ java -jar atm.jar -f myfile.txt
 $ cat myfile.txt | java -jar atm.jar -
 ```
 
+### Options
+
 | Flag | Description |
 |---|---|
 | - | Empty flag. Read from stdin. |
 | -h, --help | Prints the help text. |
 | -f, --file FILE | Parses a file containing Anime titles separated by newline. |
 
-## Usage as Library
+## Troubleshooting
 
-The console application is very slow as of now due to the re-creation of the database on each execution,
-but Anime Indexer can also be used as a Java library. For a code example see `ConsoleApplication.java`.
+| Problem | Fix |
+|---|---|
+| Some Anime are not matched correctly. | Refresh the database by deleting the *anime-offline-database.json* file in your ~/.atm directory. This helps if the Anime is very recent and the database file is too old. If that does not fix it, please open an Issue on Github with the exact title you tried to match and what the result was. |
+
+## Build
+
+Required tools:
+
+* Maven 3.3.9
+* JDK 1.8+
+
+Clone the git repository and run maven in the root directory.
+
+`$ mvn clean install`
+
+This creates the **atm.jar** file in the _target_ directory. This is the main executable as
+shown in the examples. All dependencies are contained in the jar-file.
 
 ## License
 

@@ -15,49 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConsoleApplicationTest {
 
+    private static final String DUPLICATES_FILE = "src/test/resources/containsDuplicates.txt";
     private static final String TEST_FILE_NAME = "src/test/resources/testfileForFileFlag.txt";
-    private static final String TESTFILE_FOR_FILE_FLAG_EXPECTED_RESULT = "[\n" +
-            "  {\n" +
-            "    \"originalLine\": \"Venus Project\",\n" +
-            "    \"matchedTitle\": \"Venus Project - Climax -\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"Violet Evergarden\",\n" +
-            "    \"matchedTitle\": \"Violet Evergarden\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"タービレ OVA\",\n" +
-            "    \"matchedTitle\": \"Nodame Cantabile OVA\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"chou tokkyuu\",\n" +
-            "    \"matchedTitle\": \"Chou Tokkyuu Hikarian\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"TSUKAI SALLY\",\n" +
-            "    \"matchedTitle\": \"Mahou Tsukai Sally\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"angel-tachi no private LESSON\",\n" +
-            "    \"matchedTitle\": \"Stringendo: Angel-tachi no Private Lesson\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"Kamisama Kazoku\",\n" +
-            "    \"matchedTitle\": \"Kamisama Kazoku\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"Kamisama Kiss\",\n" +
-            "    \"matchedTitle\": \"Kamisama Hajimemashita\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"Kamisama_no_Memochou\",\n" +
-            "    \"matchedTitle\": \"Kamisama no Memochou\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"originalLine\": \"Kämpfer\",\n" +
-            "    \"matchedTitle\": \"Kämpfer\"\n" +
-            "  }\n" +
-            "]";
+    private static final String TESTFILE_FOR_FILE_FLAG_EXPECTED_RESULT = "src/test/resources/testfileForFileFlagExpectedResult.txt";
+    private static final String DUPLICATES_FILE_EXPECTED_RESULTS = "src/test/resources/containsDuplicatesExcpectedResult.txt";
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -107,7 +68,7 @@ public class ConsoleApplicationTest {
             "--file=" + TEST_FILE_NAME + ", Long flag"
     })
     void shouldParseFile(String arguments, String message) throws Exception {
-        assertEquals(TESTFILE_FOR_FILE_FLAG_EXPECTED_RESULT,
+        assertEquals(StringUtils.join(Files.readAllLines(Paths.get(TESTFILE_FOR_FILE_FLAG_EXPECTED_RESULT)), "\n"),
                 ConsoleApplication.parse(ConsoleApplication.createOptions(), arguments.split("\\|")), message);
     }
 
@@ -130,8 +91,8 @@ public class ConsoleApplicationTest {
                 .lines(Paths.get(TEST_FILE_NAME)).collect(Collectors.toList()), "\n")
                 .getBytes();
 
-        assertEquals(TESTFILE_FOR_FILE_FLAG_EXPECTED_RESULT,
-                ConsoleApplication.parseStdIn(new ByteArrayInputStream(stdinData)));
+        assertEquals(StringUtils.join(Files.readAllLines(Paths.get(TESTFILE_FOR_FILE_FLAG_EXPECTED_RESULT)), "\n"),
+                ConsoleApplication.parseStdIn(new ByteArrayInputStream(stdinData), false));
     }
 
     @Test
@@ -141,6 +102,22 @@ public class ConsoleApplicationTest {
         assertEquals(ConsoleApplication.getUsageText(options),
                 ConsoleApplication.parse(options, null),
                 "Print help text if no arguments provided.");
+    }
+
+    @Test
+    void shouldShowOnlyDuplicatesFromFile() throws Exception {
+        assertEquals(StringUtils.join(Files.readAllLines(Paths.get(DUPLICATES_FILE_EXPECTED_RESULTS)), "\n"),
+                ConsoleApplication.parse(ConsoleApplication.createOptions(), "-f", DUPLICATES_FILE, "-d"));
+    }
+
+    @Test
+    void shouldShowOnlyDuplicatesFromInputStream() throws Exception {
+        byte[] stdinData = StringUtils.join(Files
+                .lines(Paths.get(DUPLICATES_FILE)).collect(Collectors.toList()), "\n")
+                .getBytes();
+
+        assertEquals(StringUtils.join(Files.readAllLines(Paths.get(DUPLICATES_FILE_EXPECTED_RESULTS)), "\n"),
+                ConsoleApplication.parseStdIn(new ByteArrayInputStream(stdinData), true));
     }
 
 }

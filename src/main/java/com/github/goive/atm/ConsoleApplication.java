@@ -11,10 +11,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConsoleApplication {
@@ -22,6 +19,7 @@ public class ConsoleApplication {
     private static final String CMD_LINE_SYNTAX = "atm [OPTIONS] <arg>";
     private static final String FILE_LONG_FLAG = "file";
     private static final String HELP_LONG_FLAG = "help";
+    private static final String DUPLICATE_LONG_FLAG = "duplicates";
 
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -59,6 +57,7 @@ public class ConsoleApplication {
 
         options.addOption("f", FILE_LONG_FLAG, true, "File with titles separated by new line.");
         options.addOption("h", HELP_LONG_FLAG, false, "Print this help.");
+        options.addOption("d", DUPLICATE_LONG_FLAG, false, "List only duplicates. (When using -f or - flags.)");
 
         return options;
     }
@@ -72,11 +71,12 @@ public class ConsoleApplication {
         }
 
         if (commandLine.getArgList().contains("-")) {
-            return parseStdIn(System.in);
+            return parseStdIn(System.in, commandLine.hasOption(DUPLICATE_LONG_FLAG));
         }
 
         if (commandLine.hasOption(FILE_LONG_FLAG)) {
-            return parseFile(commandLine.getOptionValue(FILE_LONG_FLAG).trim());
+            return parseFile(commandLine.getOptionValue(FILE_LONG_FLAG).trim(),
+                    commandLine.hasOption(DUPLICATE_LONG_FLAG));
         }
 
         if (commandLine.hasOption(HELP_LONG_FLAG)) {
@@ -97,7 +97,7 @@ public class ConsoleApplication {
         return gson.toJson(item);
     }
 
-    private static String parseFile(String fileName) throws Exception {
+    private static String parseFile(String fileName, boolean duplicatesOnly) throws Exception {
         File file = new File(fileName);
         BufferedReader br = new BufferedReader(new FileReader(file));
         TitleParser titleParser = new TitleParser(new Database());
@@ -110,10 +110,14 @@ public class ConsoleApplication {
                 })
                 .collect(Collectors.toList());
 
+        if (duplicatesOnly) {
+            return findDuplicates(fileParseResults);
+        }
+
         return gson.toJson(fileParseResults);
     }
 
-    static String parseStdIn(InputStream in) {
+    static String parseStdIn(InputStream in, boolean duplicatesOnly) {
         TitleParser titleParser = new TitleParser(new Database());
         List<String> result = new ArrayList<>();
 
@@ -135,7 +139,27 @@ public class ConsoleApplication {
                 })
                 .collect(Collectors.toList());
 
+        if (duplicatesOnly) {
+            return findDuplicates(parsedResults);
+        }
+
         return gson.toJson(parsedResults);
+    }
+
+    private static String findDuplicates(List<FileParseResult> fileParseResults) {
+        Map<FileParseResult, Integer> counters = new HashMap<>();
+        fileParseResults.forEach(item -> counters.merge(item, 1, (a, b) -> a + b));
+
+        List<FileParseResult> duplicates = counters.keySet().stream()
+                .filter(entry -> counters.get(entry) > 1)
+                .collect(Collectors.toList());
+
+        List<FileParseResult> collect = fileParseResults.stream()
+                .filter(item -> duplicates.stream()
+                        .anyMatch(duplicate -> duplicate.getMatchedTitle().equals(item.getMatchedTitle())))
+                .collect(Collectors.toList());
+
+        return gson.toJson(collect);
     }
 
 }

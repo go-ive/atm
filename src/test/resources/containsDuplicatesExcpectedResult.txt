@@ -1,0 +1,18 @@
+[
+  {
+    "originalLine": "Mirai Nikki",
+    "matchedTitle": "Mirai Nikki"
+  },
+  {
+    "originalLine": "The Future Diary",
+    "matchedTitle": "Mirai Nikki"
+  },
+  {
+    "originalLine": "Shigatsu wa kimi no Uso",
+    "matchedTitle": "Shigatsu wa Kimi no Uso"
+  },
+  {
+    "originalLine": "Your Lie in April",
+    "matchedTitle": "Shigatsu wa Kimi no Uso"
+  }
+]

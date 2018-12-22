@@ -1,0 +1,42 @@
+[
+  {
+    "originalLine": "Venus Project",
+    "matchedTitle": "Venus Project - Climax -"
+  },
+  {
+    "originalLine": "Violet Evergarden",
+    "matchedTitle": "Violet Evergarden"
+  },
+  {
+    "originalLine": "タービレ OVA",
+    "matchedTitle": "Nodame Cantabile OVA"
+  },
+  {
+    "originalLine": "chou tokkyuu",
+    "matchedTitle": "Chou Tokkyuu Hikarian"
+  },
+  {
+    "originalLine": "TSUKAI SALLY",
+    "matchedTitle": "Mahou Tsukai Sally"
+  },
+  {
+    "originalLine": "angel-tachi no private LESSON",
+    "matchedTitle": "Stringendo: Angel-tachi no Private Lesson"
+  },
+  {
+    "originalLine": "Kamisama Kazoku",
+    "matchedTitle": "Kamisama Kazoku"
+  },
+  {
+    "originalLine": "Kamisama Kiss",
+    "matchedTitle": "Kamisama Hajimemashita"
+  },
+  {
+    "originalLine": "Kamisama_no_Memochou",
+    "matchedTitle": "Kamisama no Memochou"
+  },
+  {
+    "originalLine": "Kämpfer",
+    "matchedTitle": "Kämpfer"
+  }
+]

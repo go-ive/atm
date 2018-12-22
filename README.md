@@ -84,8 +84,9 @@ $ cat myfile.txt | java -jar atm.jar -
 | Flag | Description |
 |---|---|
 | - | Empty flag. Read from stdin. |
-| -h, --help | Prints the help text. |
+| -d, --duplicates | Lists only duplicates when used in batch mode (-f or - flags). |
 | -f, --file FILE | Parses a file containing Anime titles separated by newline. |
+| -h, --help | Prints the help text. |
 
 ## Troubleshooting
 

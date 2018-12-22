@@ -26,12 +26,12 @@ public class TitleParser {
             return second.get();
         }
 
-        Optional<Item> third = searchPartialTitle(cleanedTitleCandidate);
+        Optional<Item> third = searchPartialTitle(cleanedTitleCandidate.toLowerCase());
         if (third.isPresent()) {
             return third.get();
         }
 
-        return searchByBestMatchingTitle(cleanedTitleCandidate);
+        return searchByBestMatchingTitle(cleanedTitleCandidate.toLowerCase());
     }
 
     String cleanup(String titleCandidate) {
@@ -48,9 +48,9 @@ public class TitleParser {
                 .forEach(item -> {
                     item.setSynonymScore(0.0);
                     item.setTitleScore(0.0);
-                    item.setTitleScore(jaroWinklerDistance.apply(item.getTitle().toLowerCase(), titleCandidate.toLowerCase()));
+                    item.setTitleScore(jaroWinklerDistance.apply(item.getTitle().toLowerCase(), titleCandidate));
                     item.getSynonyms().forEach(syn -> {
-                        Double distanceOfSynonym = jaroWinklerDistance.apply(syn.toLowerCase(), titleCandidate.toLowerCase());
+                        Double distanceOfSynonym = jaroWinklerDistance.apply(syn.toLowerCase(), titleCandidate);
                         if (distanceOfSynonym > item.getSynonymScore()) {
                             item.setSynonymScore(distanceOfSynonym);
                         }
@@ -76,7 +76,7 @@ public class TitleParser {
 
     private Optional<Item> searchPartialTitle(String titleCandidate) {
         return database.getItems().parallelStream()
-                .filter(item -> item.getTitle().toLowerCase().contains(titleCandidate.toLowerCase()))
+                .filter(item -> item.getTitle().toLowerCase().contains(titleCandidate))
                 .findFirst();
     }
 

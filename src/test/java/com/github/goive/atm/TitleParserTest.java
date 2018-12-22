@@ -20,7 +20,7 @@ public class TitleParserTest {
     @ParameterizedTest
     @CsvSource({
             "[project-gxs] UFO Princess Valkyrie Collection [10bit DVD 480p], UFO Princess Valkyrie Collection",
-            "[bonkai77] Mirai Nikki + OVA (ENHANCED) [1080p] [DUAL-AUDIO] [x265] [HEVC] [AAC] [10bit], Mirai Nikki + OVA (ENHANCED)"
+            "[bonkai77] Mirai Nikki + OVA (ENHANCED) [1080p] [DUAL-AUDIO] [x265] [HEVC] [AAC] [10bit], Mirai Nikki + OVA"
     })
     void shouldCleanupTags(String input, String expected) {
         String result = titleParser.cleanup(input);

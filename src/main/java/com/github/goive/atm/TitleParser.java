@@ -35,7 +35,10 @@ public class TitleParser {
     }
 
     String cleanup(String titleCandidate) {
-        return titleCandidate.replaceAll("\\[.*?\\]", "").trim();
+        return titleCandidate
+                .replaceAll("\\[.*?\\]", "")
+                .replaceAll("\\(.*?\\)", "")
+                .trim();
     }
 
     private Item searchByBestMatchingTitle(String titleCandidate) {
@@ -45,9 +48,9 @@ public class TitleParser {
                 .forEach(item -> {
                     item.setSynonymScore(0.0);
                     item.setTitleScore(0.0);
-                    item.setTitleScore(jaroWinklerDistance.apply(item.getTitle(), titleCandidate));
+                    item.setTitleScore(jaroWinklerDistance.apply(item.getTitle().toLowerCase(), titleCandidate.toLowerCase()));
                     item.getSynonyms().forEach(syn -> {
-                        Double distanceOfSynonym = jaroWinklerDistance.apply(syn, titleCandidate);
+                        Double distanceOfSynonym = jaroWinklerDistance.apply(syn.toLowerCase(), titleCandidate.toLowerCase());
                         if (distanceOfSynonym > item.getSynonymScore()) {
                             item.setSynonymScore(distanceOfSynonym);
                         }

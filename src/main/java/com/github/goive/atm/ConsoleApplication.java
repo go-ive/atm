@@ -157,6 +157,7 @@ public class ConsoleApplication {
         List<FileParseResult> collect = fileParseResults.stream()
                 .filter(item -> duplicates.stream()
                         .anyMatch(duplicate -> duplicate.getMatchedTitle().equals(item.getMatchedTitle())))
+                .sorted(Comparator.comparing(FileParseResult::getMatchedTitle))
                 .collect(Collectors.toList());
 
         return gson.toJson(collect);
